@@ -40,9 +40,3 @@ def mainDebug(clock, x=0,y=0): #clock for fps
     fpsSurf = pygame.font.Font(None, fontSize).render(f"FPS: {int(clock.get_fps())}", True, (180,0,0))
     fpsRect = fpsSurf.get_rect(topleft=(x,y+fontSize*4))
     screen.blit(fpsSurf, fpsRect)
-
-
-"""
-Info you could require from a program by default:
-- FPS #clock.get_fps() -> gives average FPS of last 10 frames
-"""
