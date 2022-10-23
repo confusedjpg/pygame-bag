@@ -1,5 +1,12 @@
 #credits to Clear Code for the tutorial
-import pygame, sys, os
+import pygame, sys, os, random as rd
+
+pygame.init()
+clock = pygame.time.Clock()
+
+WIDTH, HEIGHT = 1000,800
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Sprite Introduction")
 
 #crosshair class
 class Crosshair(pygame.sprite.Sprite): #inherit from pygame.sprite.Sprite
@@ -15,22 +22,30 @@ class Crosshair(pygame.sprite.Sprite): #inherit from pygame.sprite.Sprite
         self.rect.center = pygame.mouse.get_pos()
 
     def shoot(self):
+        pygame.sprite.spritecollide(self, target_group, True)
         self.pew.play()
 
-pygame.init()
-clock = pygame.time.Clock()
-
-WIDTH, HEIGHT = 800,800
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Sprite Introduction")
+class Target(Crosshair): #target class, inherits from Crosshair
+    def __init__(self, x, y, path):
+        super().__init__(path)
+        self.rect.center = (x, y)
 
 #crosshair stuff
 crosshair = Crosshair(os.path.join("art", "crosshair.png"))
 crosshair_group = pygame.sprite.Group() #a sprite group, the only way to display sprites
 crosshair_group.add(crosshair)
 
+#target stuff
+target_group = pygame.sprite.Group()
+for target in range(30):
+    target = Target(rd.randrange(0,WIDTH), rd.randrange(0,HEIGHT), os.path.join("art", "target.png"))
+    while pygame.sprite.spritecollideany(target, target_group):
+        target = Target(rd.randrange(0,WIDTH), rd.randrange(0,HEIGHT), os.path.join("art", "target.png"))
+    target_group.add(target)
+
 #images
 background = pygame.image.load(os.path.join("art", "background.png"))
+background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
 pygame.mouse.set_visible(False) #hide mouse
 while 1:
@@ -42,7 +57,8 @@ while 1:
             crosshair.shoot()
         
     screen.blit(background, (0,0)) #display background
+    target_group.draw(screen) #draw targets
     crosshair_group.draw(screen) #draw sprites of chair_group
-    crosshair_group.update()
+    crosshair_group.update() #update crosshair
     pygame.display.flip()
     clock.tick(60)
