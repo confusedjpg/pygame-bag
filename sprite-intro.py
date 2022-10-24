@@ -14,21 +14,19 @@ class Crosshair(pygame.sprite.Sprite): #inherit from pygame.sprite.Sprite
         super().__init__()
         
         self.image = pygame.image.load(path)
-        self.rect = self.image.get_rect()
         self.pew = pygame.mixer.Sound(os.path.join("art", "pew.wav"))
         self.pew.set_volume(0.2)
 
-    def update(self):
-        self.rect.center = pygame.mouse.get_pos()
-
     def shoot(self):
-        pygame.sprite.spritecollide(crosshair, target_group, True)
+        for t in target_group:
+            if t.rect.collidepoint(pygame.mouse.get_pos()):
+                t.remove(target_group)
         self.pew.play()
 
 class Target(Crosshair): #target class, inherits from Crosshair
     def __init__(self, x, y, path):
         super().__init__(path)
-        self.rect.center = (x, y)
+        self.rect = self.image.get_rect(center=(x,y))
 
 class GameState():
     def __init__(self):
@@ -42,6 +40,7 @@ class GameState():
         screen.blit(ready, (WIDTH/2-ready.get_width()/2, HEIGHT/2-ready.get_height()/2))
     
     def main_game(self):
+        pygame.mouse.set_cursor(pygame.cursors.Cursor((20,20), crosshair.image))
         target_group.draw(screen)
         
 
@@ -55,8 +54,6 @@ game_state = GameState()
 
 #crosshair stuff
 crosshair = Crosshair(os.path.join("art", "crosshair.png"))
-crosshair_group = pygame.sprite.Group() #a sprite group, the only way to display sprites
-crosshair_group.add(crosshair)
 
 #target stuff
 target_group = pygame.sprite.Group()
@@ -72,7 +69,6 @@ background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
 ready = pygame.image.load(os.path.join("art", "ready.png"))
 
-pygame.mouse.set_visible(False) #hide mouse
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -83,7 +79,5 @@ while 1:
 
     screen.blit(background, (0,0)) #display background
     game_state.state_manager()
-    crosshair_group.update() #update crosshair
-    crosshair_group.draw(screen) #draw sprites of chair_group
     pygame.display.flip()
     clock.tick(60)
