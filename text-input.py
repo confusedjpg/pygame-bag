@@ -31,7 +31,7 @@ while 1:
     
     screen.fill((0,0,0))
     pygame.draw.rect(screen, color_active if active else color_passive, input_rect, 2) #draw the rect, the 2 is for an outline
-    text_surf = pygame.font.Font(None, 32).render(user_text, True, (255,255,255))
+    text_surf = pygame.font.Font(None, 32).render(user_text+"|" if active else user_text, True, (255,255,255))
 
     input_rect.w = max(100, text_surf.get_width()+10) #change rect width accordingly, 100 is the minimum width
     screen.blit(text_surf, (input_rect.x+5, input_rect.y+5))
