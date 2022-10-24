@@ -8,25 +8,19 @@ WIDTH, HEIGHT = 1000,800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Sprite Introduction")
 
-#crosshair class
-class Crosshair(pygame.sprite.Sprite): #inherit from pygame.sprite.Sprite
-    def __init__(self, path):
+class Target(pygame.sprite.Sprite): #target class, inherits from Crosshair
+    def __init__(self, x, y, path):
         super().__init__()
-        
         self.image = pygame.image.load(path)
+        self.rect = self.image.get_rect(center=(x,y))
         self.pew = pygame.mixer.Sound(os.path.join("art", "pew.wav"))
-        self.pew.set_volume(0.2)
-
-    def shoot(self):
+        self.pew.set_volume(0.2) #lower volume to not blow my eardrums
+    
+    def update(self):
         for t in target_group:
             if t.rect.collidepoint(pygame.mouse.get_pos()):
                 t.remove(target_group)
         self.pew.play()
-
-class Target(Crosshair): #target class, inherits from Crosshair
-    def __init__(self, x, y, path):
-        super().__init__(path)
-        self.rect = self.image.get_rect(center=(x,y))
 
 class GameState():
     def __init__(self):
@@ -40,7 +34,7 @@ class GameState():
         screen.blit(ready, (WIDTH/2-ready.get_width()/2, HEIGHT/2-ready.get_height()/2))
     
     def main_game(self):
-        pygame.mouse.set_cursor(pygame.cursors.Cursor((20,20), crosshair.image))
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_CROSSHAIR) #set cursor to default crosshair
         target_group.draw(screen)
         
 
@@ -51,9 +45,6 @@ class GameState():
             self.main_game()
 
 game_state = GameState()
-
-#crosshair stuff
-crosshair = Crosshair(os.path.join("art", "crosshair.png"))
 
 #target stuff
 target_group = pygame.sprite.Group()
@@ -75,7 +66,7 @@ while 1:
             pygame.quit()
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
-            crosshair.shoot()
+            target.update() #pew
 
     screen.blit(background, (0,0)) #display background
     game_state.state_manager()
