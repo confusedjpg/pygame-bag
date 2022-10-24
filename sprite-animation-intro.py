@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.sprites = [] #container for the sprites
         for nr in range(1,11):
-            self.sprites.append(pygame.image.load(os.path.join("art", f"attack_{nr}.png"))) #load all frames
+            self.sprites.append(pygame.image.load(os.path.join("art", "frog", f"attack_{nr}.png"))) #load all frames
         self.current_sprite = 0
         self.image = pygame.transform.scale2x(self.sprites[self.current_sprite]) #set sprite to initial frame
 
