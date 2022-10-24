@@ -27,6 +27,7 @@ class GameState():
         self.state = "intro"
 
     def intro(self):
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_WAIT) #set cursor to waiting animation
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 self.state = "main_game"
