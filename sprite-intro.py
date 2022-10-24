@@ -22,13 +22,36 @@ class Crosshair(pygame.sprite.Sprite): #inherit from pygame.sprite.Sprite
         self.rect.center = pygame.mouse.get_pos()
 
     def shoot(self):
-        pygame.sprite.spritecollide(self, target_group, True)
+        pygame.sprite.spritecollide(crosshair, target_group, True)
         self.pew.play()
 
 class Target(Crosshair): #target class, inherits from Crosshair
     def __init__(self, x, y, path):
         super().__init__(path)
         self.rect.center = (x, y)
+
+class GameState():
+    def __init__(self):
+        self.state = "intro"
+
+    def intro(self):
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                self.state = "main_game"
+        
+        screen.blit(ready, (WIDTH/2-ready.get_width()/2, HEIGHT/2-ready.get_height()/2))
+    
+    def main_game(self):
+        target_group.draw(screen)
+        
+
+    def state_manager(self):
+        if self.state == "intro":
+            self.intro()
+        else:
+            self.main_game()
+
+game_state = GameState()
 
 #crosshair stuff
 crosshair = Crosshair(os.path.join("art", "crosshair.png"))
@@ -47,6 +70,8 @@ for target in range(30):
 background = pygame.image.load(os.path.join("art", "background.png"))
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
+ready = pygame.image.load(os.path.join("art", "ready.png"))
+
 pygame.mouse.set_visible(False) #hide mouse
 while 1:
     for event in pygame.event.get():
@@ -55,10 +80,10 @@ while 1:
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN:
             crosshair.shoot()
-        
+
     screen.blit(background, (0,0)) #display background
-    target_group.draw(screen) #draw targets
-    crosshair_group.draw(screen) #draw sprites of chair_group
+    game_state.state_manager()
     crosshair_group.update() #update crosshair
+    crosshair_group.draw(screen) #draw sprites of chair_group
     pygame.display.flip()
     clock.tick(60)
