@@ -17,6 +17,8 @@ class Player(pygame.sprite.Sprite):
             self.sprites.append(pygame.image.load(os.path.join("art", "frog", f"attack_{nr}.png"))) #load all frames
         self.current_sprite = 0
         self.image = pygame.transform.scale2x(self.sprites[self.current_sprite]) #set sprite to initial frame
+        self.niom = pygame.mixer.Sound(os.path.join("art", "frog", "niom.wav"))
+        self.niom.set_volume(.5) #lower volume to reduce my nightmares
 
         self.rect = self.image.get_rect(center=(x,y))
         self.is_animating = False
@@ -46,6 +48,7 @@ while 1:
 
         if event.type == pygame.KEYDOWN: #run animation only on keypress
             player.animate()
+            player.niom.play() #niom
     
     pygame.display.flip()
     screen.fill((0,0,0))
