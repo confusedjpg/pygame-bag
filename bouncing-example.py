@@ -13,6 +13,8 @@ screen = pygame.display.set_mode(size)
 ball = pygame.image.load(os.path.join("art", "target.png"))
 ballrect = ball.get_rect(center = (150,265)) #random center
 
+clock = pygame.time.Clock()
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
@@ -26,3 +28,5 @@ while True:
     screen.fill(black)
     screen.blit(ball, ballrect)
     pygame.display.flip()
+
+    clock.tick(60)
