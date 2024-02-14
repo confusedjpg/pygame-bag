@@ -23,7 +23,7 @@ def launch(window_name="Color Picker"):
                 screen.set_at((x, y), (x, y, (x+y)%256))
 
     fill()
-    RGBA = (0, 0, 0)
+    RGB = (0, 0, 0)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key in (pygame.K_ESCAPE, pygame.K_RETURN)):
@@ -50,7 +50,7 @@ def launch(window_name="Color Picker"):
         
         pygame.display.flip()
         clock.tick(60)
-    return RGBA
+    return RGB
 
 if __name__ == "__main__":
     launch()
